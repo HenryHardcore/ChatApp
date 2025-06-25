@@ -2,18 +2,22 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Header from './Header'
+import Chatovi from './Chatovi'
 
 export default function App() {
   return (
-    <SafeAreaProvider>
-      <View style={styles.root}>
-        <View style={styles.statusBarBackground} />
-        <StatusBar style="light" translucent />
-        <SafeAreaView>
-          <Header/>
-        </SafeAreaView>
-      </View>
-    </SafeAreaProvider>
+    <>
+      <SafeAreaProvider>
+        <View style={styles.root}>
+          <View style={styles.statusBarBackground} />
+          <StatusBar style="light" translucent />
+          <SafeAreaView style={styles.safeArea}>
+            <Header/>
+            <Chatovi/>
+          </SafeAreaView>
+        </View>
+      </SafeAreaProvider>
+    </>
   );
 }
 
@@ -32,4 +36,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  safeArea: {
+    flex: 1,
+  }
 });
