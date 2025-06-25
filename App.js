@@ -10,7 +10,6 @@ export default function App() {
     <>
       <SafeAreaProvider>
         <View style={styles.root}>
-          <View style={styles.statusBarBackground} />
           <StatusBar style="light" translucent />
           <SafeAreaView style={styles.safeArea}>
             <Header/>
@@ -26,10 +25,6 @@ export default function App() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: '#000', 
-  },
-  statusBarBackground: {
-    height: StatusBar.currentHeight || 24, 
     backgroundColor: '#000', 
   },
   container: {
