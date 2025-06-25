@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Header from './Header'
 import Chatovi from './Chatovi'
+import Footer from './Footer'
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
           <SafeAreaView style={styles.safeArea}>
             <Header/>
             <Chatovi/>
+            <Footer/>
           </SafeAreaView>
         </View>
       </SafeAreaProvider>

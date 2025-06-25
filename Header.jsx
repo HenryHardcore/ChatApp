@@ -1,6 +1,5 @@
 import { View, StyleSheet, Text, TouchableOpacity, ImageBackground } from "react-native";
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { widthPercentageToDPas as wp } from "react-native-responsive-screen";
 import img from "./fotografije/ikon.png"
 
 
