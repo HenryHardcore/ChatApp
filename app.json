@@ -13,9 +13,20 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.mane.mesindzer",
+      "config": {
+        "googleSignIn": {
+          "reservedClientId": "432407185349-r22g6il2bot521c7o8k28h4oipro60td.apps.googleusercontent.com"
+        }
+      },
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
+      "package": "com.mane.mesindzer",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -24,6 +35,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "cb32a002-825f-44aa-9f3a-a8c1134c93d7"
+      }
     }
   }
 }

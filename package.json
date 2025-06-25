@@ -10,8 +10,11 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "eas-cli": "^16.13.0",
     "expo": "~53.0.12",
+    "expo-dev-client": "~5.2.1",
     "expo-status-bar": "~2.2.3",
+    "firebase": "^11.9.1",
     "react": "19.0.0",
     "react-native": "0.79.4",
     "react-native-responsive-screen": "^1.4.2",
