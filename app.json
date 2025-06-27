@@ -15,9 +15,6 @@
     "ios": {
       "bundleIdentifier": "com.mane.mesindzer",
       "config": {
-        "googleSignIn": {
-          "reservedClientId": "432407185349-r22g6il2bot521c7o8k28h4oipro60td.apps.googleusercontent.com"
-        }
       },
       "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {
