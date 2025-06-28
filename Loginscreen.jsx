@@ -36,50 +36,58 @@ export default function AuthScreen({ navigation }) {
 	};
 
 	return (
-		<View style={styles.container}>
-			<TextInput
-				placeholder="Email"
-				value={email}
-				onChangeText={setEmail}
-				style={styles.input}
-				placeholderTextColor="#888"
-			/>
-			<TextInput
-				placeholder="Password"
-				secureTextEntry
-				value={password}
-				onChangeText={setPassword}
-				style={styles.input}
-				placeholderTextColor="#888"
-			/>
+		<View style={styles.containerr}>
+			<View style={styles.container}>
+				<TextInput
+					placeholder="Email"
+					value={email}
+					onChangeText={setEmail}
+					style={styles.input}
+					placeholderTextColor="#888"
+				/>
+				<TextInput
+					placeholder="Password"
+					secureTextEntry
+					value={password}
+					onChangeText={setPassword}
+					style={styles.input}
+					placeholderTextColor="#888"
+				/>
 
-			<TouchableOpacity style={styles.button} onPress={handleLogin}>
-				<Text style={styles.buttonText}>Login</Text>
-			</TouchableOpacity>
+				<TouchableOpacity style={styles.button} onPress={handleLogin}>
+					<Text style={styles.buttonText}>Login</Text>
+				</TouchableOpacity>
 
-			<View style={styles.centerRow}>
-				<Text style={styles.text}>Don't have an account? </Text>
-				<TouchableOpacity onPress={() => navigation.navigate('Register')}>
-					<Text style={styles.register}>Register</Text>
+				<View style={styles.centerRow}>
+					<Text style={styles.text}>Don't have an account? </Text>
+					<TouchableOpacity onPress={() => navigation.navigate('Register')}>
+						<Text style={styles.register}>Register</Text>
+					</TouchableOpacity>
+				</View>
+
+				<TouchableOpacity
+					style={[styles.button, styles.googleButton]}
+					onPress={handleGoogleLogin}
+				>
+					<Text style={styles.buttonText}>Sign in with Google</Text>
 				</TouchableOpacity>
 			</View>
-
-			<TouchableOpacity
-				style={[styles.button, styles.googleButton]}
-				onPress={handleGoogleLogin}
-			>
-				<Text style={styles.buttonText}>Sign in with Google</Text>
-			</TouchableOpacity>
 		</View>
 	);
 }
 
 const styles = StyleSheet.create({
+	containerr: {
+		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: 'black', 
+	},
 	container: {
 		padding: 20,
-		flex: 1,
-		justifyContent: 'center',
-		backgroundColor: 'green',
+		backgroundColor: 'grey',
+		borderRadius: 12,
+		width: '90%',
 	},
 	input: {
 		height: 50,

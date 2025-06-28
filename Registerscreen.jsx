@@ -31,58 +31,66 @@ export default function RegisterScreen({ navigation }) {
 	};
 
 	return (
-		<View style={styles.container}>
-			<TextInput
-				placeholder="Email"
-				value={email}
-				onChangeText={setEmail}
-				style={styles.input}
-				placeholderTextColor="#888"
-			/>
-			<TextInput
-				placeholder="Username"
-				value={username}
-				onChangeText={setUsername}
-				style={styles.input}
-				placeholderTextColor="#888"
-			/>
-			<TextInput
-				placeholder="Password"
-				secureTextEntry
-				value={password}
-				onChangeText={setPassword}
-				style={styles.input}
-				placeholderTextColor="#888"
-			/>
-			<TextInput
-				placeholder="Confirm Password"
-				secureTextEntry
-				value={confirmPassword}
-				onChangeText={setConfirmPassword}
-				style={styles.input}
-				placeholderTextColor="#888"
-			/>
+		<View style={styles.containerr}>
+			<View style={styles.container}>
+				<TextInput
+					placeholder="Email"
+					value={email}
+					onChangeText={setEmail}
+					style={styles.input}
+					placeholderTextColor="#888"
+				/>
+				<TextInput
+					placeholder="Username"
+					value={username}
+					onChangeText={setUsername}
+					style={styles.input}
+					placeholderTextColor="#888"
+				/>
+				<TextInput
+					placeholder="Password"
+					secureTextEntry
+					value={password}
+					onChangeText={setPassword}
+					style={styles.input}
+					placeholderTextColor="#888"
+				/>
+				<TextInput
+					placeholder="Confirm Password"
+					secureTextEntry
+					value={confirmPassword}
+					onChangeText={setConfirmPassword}
+					style={styles.input}
+					placeholderTextColor="#888"
+				/>
 
-			<TouchableOpacity style={styles.button} onPress={handleRegister}>
-				<Text style={styles.buttonText}>Register</Text>
-			</TouchableOpacity>
-
-			<View style={styles.centerRow}>
-				<Text style={styles.text}>Already have an account? </Text>
-				<TouchableOpacity onPress={() => navigation.goBack()}>
-					<Text style={styles.register}>Log In</Text>
+				<TouchableOpacity style={styles.button} onPress={handleRegister}>
+					<Text style={styles.buttonText}>Register</Text>
 				</TouchableOpacity>
+
+				<View style={styles.centerRow}>
+					<Text style={styles.text}>Already have an account? </Text>
+					<TouchableOpacity onPress={() => navigation.goBack()}>
+						<Text style={styles.register}>Log In</Text>
+					</TouchableOpacity>
+				</View>
 			</View>
 		</View>
 	);
 }
 
 const styles = StyleSheet.create({
+	containerr: {
+		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: 'black', 
+	},
 	container: {
 		padding: 20,
-		flex: 1,
-		justifyContent: 'center',
-		backgroundColor: 'green',
+		backgroundColor: 'grey',
+		borderRadius: 12,
+		width: '90%',
 	},
 	input: {
 		height: 50,
