@@ -1,24 +1,25 @@
-import { View, StyleSheet, Text, TouchableOpacity, ImageBackground } from "react-native"
+import { View, StyleSheet, TouchableOpacity, ImageBackground } from "react-native"
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { useNavigation } from '@react-navigation/native'; 
 import settings from './fotografije/settings.png'
 import chats from "./fotografije/chats.png"
 
 function Footer() {
-  return(
+  const navigation = useNavigation(); 
+
+  return (
     <View style={styles.footer}>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Chatovi')}> 
         <ImageBackground
           source={chats}
           style={styles.image}
-        >
-        </ImageBackground>
+        />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Settings')}> 
         <ImageBackground
           source={settings}
           style={styles.image}
-        >
-        </ImageBackground>
+        />
       </TouchableOpacity>
     </View>
   )
@@ -26,7 +27,7 @@ function Footer() {
 
 const styles = StyleSheet.create({
   footer: {
-    backgroundColor: 'red',
+    backgroundColor: 'black',
     height: hp('7%'),
     width: '100%',
     flexDirection: 'row',

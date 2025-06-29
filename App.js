@@ -14,6 +14,7 @@ import Footer from './Footer';
 import Loginscreen from './Loginscreen';
 import RegisterScreen from './Registerscreen';
 import Chatovi from './Chatovi'; 
+import Settings from './Settings';
 import { AuthProvider, useAuth } from './auth';
 
 const Stack = createNativeStackNavigator();
@@ -47,9 +48,12 @@ function InnerApp() {
           
           {userLoggedIn && <Header />}
 
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Navigator screenOptions={{ headerShown: false, animation: 'none', }}>
             {userLoggedIn ? (
-              <Stack.Screen name="Home" component={Chatovi} />
+              <>
+                <Stack.Screen name="Chatovi" component={Chatovi} />
+                <Stack.Screen name="Settings" component={Settings} />
+              </>
             ) : (
               <>
                 <Stack.Screen name="Login" component={Loginscreen} />

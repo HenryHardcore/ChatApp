@@ -22,7 +22,7 @@ function Header() {
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: 'red',
+    backgroundColor: 'black',
     height: hp('7%'),
     width: '100%',
     flexDirection: 'row',
