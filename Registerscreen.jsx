@@ -8,10 +8,13 @@ import {
 	Alert
 } from 'react-native';
 import { doCreateUserWithEmailAndPassword, doSendEmailVerification } from './firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from './firebase/firebase';
 
 export default function RegisterScreen({ navigation }) {
+	const [firstName, setFirstName] = useState('');
+	const [lastName, setLastName] = useState('');
 	const [email, setEmail] = useState('');
-	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -22,7 +25,16 @@ export default function RegisterScreen({ navigation }) {
 		}
 
 		try {
-			await doCreateUserWithEmailAndPassword(email, password);
+			const userCredential = await doCreateUserWithEmailAndPassword(email, password);
+			const user = userCredential.user;
+
+			await setDoc(doc(db, 'users', user.uid), {
+				firstName,
+				lastName,
+				email,
+				createdAt: new Date()
+			});
+
 			await doSendEmailVerification();
 			Alert.alert('Success', 'Verification email sent!');
 		} catch (err) {
@@ -34,16 +46,23 @@ export default function RegisterScreen({ navigation }) {
 		<View style={styles.containerr}>
 			<View style={styles.container}>
 				<TextInput
-					placeholder="Email"
-					value={email}
-					onChangeText={setEmail}
+					placeholder="First Name"
+					value={firstName}
+					onChangeText={setFirstName}
 					style={styles.input}
 					placeholderTextColor="#888"
 				/>
 				<TextInput
-					placeholder="Username"
-					value={username}
-					onChangeText={setUsername}
+					placeholder="Last Name"
+					value={lastName}
+					onChangeText={setLastName}
+					style={styles.input}
+					placeholderTextColor="#888"
+				/>
+				<TextInput
+					placeholder="Email"
+					value={email}
+					onChangeText={setEmail}
 					style={styles.input}
 					placeholderTextColor="#888"
 				/>

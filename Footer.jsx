@@ -1,6 +1,6 @@
 import { View, StyleSheet, Text, TouchableOpacity, ImageBackground } from "react-native"
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import menu from './fotografije/menu.png'
+import settings from './fotografije/settings.png'
 import chats from "./fotografije/chats.png"
 
 function Footer() {
@@ -15,7 +15,7 @@ function Footer() {
       </TouchableOpacity>
       <TouchableOpacity style={styles.button}>
         <ImageBackground
-          source={menu}
+          source={settings}
           style={styles.image}
         >
         </ImageBackground>
