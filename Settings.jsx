@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -20,8 +20,14 @@ import At from './fotografije/@-white.png'
 import Att from './fotografije/@-black.png'
 import { useContext } from 'react';
 import { DarkModeContext } from './DarkModeContext';
+import { auth, db } from './firebase/firebase';
+import { doc, getDoc } from 'firebase/firestore';
+import { updateDoc } from 'firebase/firestore';
+import { query, where, collection, getDocs } from 'firebase/firestore';
 
 export default function Settings() {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [activeStatus, setActiveStatus] = useState(true);
   const [username, setUsername] = useState('manojlo123');
@@ -30,6 +36,28 @@ export default function Settings() {
   const [newUsername, setNewUsername] = useState(username);
   const [avatarModalVisible, setAvatarModalVisible] = useState(false);
   const [avatarUri, setAvatarUri] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          const userDoc = await getDoc(doc(db, 'users', user.uid));
+          if (userDoc.exists()) {
+            const data = userDoc.data();
+            setFirstName(data.firstName || '');
+            setLastName(data.lastName || '');
+            setUsername(data.username || '');
+            setNewUsername(data.username || '');
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleTakePhoto = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -71,11 +99,44 @@ export default function Settings() {
     setAvatarModalVisible(false); 
   };
 
-  const handleUsernameChange = () => {
-    setUsername(newUsername);
-    setEditingUsername(false);
-    setModalVisible(false);
-    Alert.alert('Saved', `Username updated to "${newUsername}"`);
+  const handleUsernameChange = async () => {
+    const user = auth.currentUser;
+    
+
+    if (!newUsername.trim()) {
+      Alert.alert('Invalid', 'Username cannot be empty.');
+      return;
+    }
+    
+    try {
+      const q = query(
+        collection(db, 'users'),
+        where('username', '==', newUsername)
+      );
+      
+      const querySnapshot = await getDocs(q);
+      
+      const usernameTaken = querySnapshot.docs.some(doc => doc.id !== user.uid);
+
+      if (usernameTaken) {
+        Alert.alert('Username taken', 'Please choose a different username.');
+        return;
+      }
+
+      
+
+      await updateDoc(doc(db, 'users', user.uid), {
+        username: newUsername
+      });
+
+      setUsername(newUsername);
+      setEditingUsername(false);
+      setModalVisible(false);
+      Alert.alert('Saved', `Username updated to "${newUsername}"`);
+    } catch (error) {
+      console.error('Error updating username:', error);
+      Alert.alert('Error', 'Something went wrong.');
+    }
   };
 
   const handleCopyLink = () => {
@@ -88,7 +149,7 @@ export default function Settings() {
         <TouchableOpacity onPress={() => setAvatarModalVisible(true)}>
           <Image source={avatarUri ? { uri: avatarUri } : avatar} style={styles.avatar} />
         </TouchableOpacity>
-        <Text style={[styles.name, darkMode && styles.darkText]}>Manojlo Stanarević</Text>
+        <Text style={[styles.name, darkMode && styles.darkText]}>{firstName} {lastName}</Text>
         
         <Text style={[styles.subText, darkMode && styles.darkText]}>@{username}</Text>
         
