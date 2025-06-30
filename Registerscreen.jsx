@@ -10,6 +10,7 @@ import {
 import { doCreateUserWithEmailAndPassword, doSendEmailVerification } from './firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from './firebase/firebase';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 
 export default function RegisterScreen({ navigation }) {
 	const [firstName, setFirstName] = useState('');
@@ -28,15 +29,35 @@ export default function RegisterScreen({ navigation }) {
 			const userCredential = await doCreateUserWithEmailAndPassword(email, password);
 			const user = userCredential.user;
 
+			const baseUsername = `${firstName.toLowerCase()}.${lastName.toLowerCase()}`;
+			let finalUsername = baseUsername;
+			let suffix = 1;
+
+			const usersRef = collection(db, 'users');
+			let usernameExists = true;
+
+			while (usernameExists) {
+				const q = query(usersRef, where('username', '==', finalUsername));
+				const querySnapshot = await getDocs(q);
+
+				if (querySnapshot.empty) {
+					usernameExists = false;
+				} else {
+					finalUsername = `${baseUsername}.${suffix}`;
+					suffix++;
+				}
+			}
+
 			await setDoc(doc(db, 'users', user.uid), {
 				firstName,
 				lastName,
 				email,
-				createdAt: new Date()
+				username: finalUsername,
+				createdAt: new Date(),
 			});
 
 			await doSendEmailVerification();
-			Alert.alert('Success', 'Verification email sent!');
+			Alert.alert('Success', `Verification email sent!`);
 		} catch (err) {
 			Alert.alert('Error', err.message);
 		}
