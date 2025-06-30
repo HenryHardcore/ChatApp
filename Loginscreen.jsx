@@ -20,7 +20,6 @@ export default function AuthScreen({ navigation }) {
 	const handleLogin = async () => {
 		try {
 			await doSignInWithEmailAndPassword(email, password);
-			Alert.alert('Success', 'Logged in!');
 		} catch (err) {
 			Alert.alert('Error', err.message);
 		}

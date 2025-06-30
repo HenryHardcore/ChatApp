@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   darkContainer: {
-    backgroundColor: '#121212',
+    backgroundColor: 'black',
   },
   profileSection: {
     alignItems: 'center',

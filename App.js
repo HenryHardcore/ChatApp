@@ -15,6 +15,7 @@ import Loginscreen from './Loginscreen';
 import RegisterScreen from './Registerscreen';
 import Chatovi from './Chatovi'; 
 import Settings from './Settings';
+import Search from './Search';
 import { AuthProvider, useAuth } from './auth';
 
 const Stack = createNativeStackNavigator();
@@ -53,6 +54,7 @@ function InnerApp() {
               <>
                 <Stack.Screen name="Chatovi" component={Chatovi} />
                 <Stack.Screen name="Settings" component={Settings} />
+                <Stack.Screen name="Search" component={Search} />
               </>
             ) : (
               <>
