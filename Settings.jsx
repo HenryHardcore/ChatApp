@@ -30,7 +30,7 @@ export default function Settings() {
   const [lastName, setLastName] = useState('');
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [activeStatus, setActiveStatus] = useState(true);
-  const [username, setUsername] = useState('manojlo123');
+  const [username, setUsername] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [editingUsername, setEditingUsername] = useState(false);
   const [newUsername, setNewUsername] = useState(username);
