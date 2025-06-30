@@ -2,20 +2,24 @@ import { View, StyleSheet, Text, TouchableOpacity, ImageBackground } from "react
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
 import img from "./fotografije/ikon.png";
+import imgg from './fotografije/edit-black.png'
+import { useContext } from 'react';
+import { DarkModeContext } from './DarkModeContext';
 
 function Header() {
   const navigation = useNavigation();
+  const { darkMode } = useContext(DarkModeContext);
 
   const goToSearch = () => {
     navigation.navigate('Search'); 
   };
 
   return (
-    <View style={styles.header}>
-      <Text style={styles.text}>Mesindžer</Text>
+    <View style={darkMode ? styles.header: styles.headerlight}>
+      <Text style={darkMode ? styles.text : styles.dark}>Mesindžer</Text>
       <TouchableOpacity style={styles.button} onPress={goToSearch}>
         <ImageBackground
-          source={img}
+          source={darkMode ? img : imgg}
           style={styles.image}
         />
       </TouchableOpacity>
@@ -33,8 +37,22 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 15,
   },
+  headerlight: {
+    backgroundColor: 'white',
+    height: hp('7%'),
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 15,
+  },
   text: {
     color: 'white',
+    fontSize: hp('7%') * 0.6,
+    fontWeight: 'bold',
+  },
+  dark: {
+    color: 'black',
     fontSize: hp('7%') * 0.6,
     fontWeight: 'bold',
   },

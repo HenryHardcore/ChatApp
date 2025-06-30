@@ -16,6 +16,7 @@ import RegisterScreen from './Registerscreen';
 import Chatovi from './Chatovi'; 
 import Settings from './Settings';
 import Search from './Search';
+import { DarkModeProvider } from './DarkModeContext';
 import { AuthProvider, useAuth } from './auth';
 
 const Stack = createNativeStackNavigator();
@@ -23,9 +24,11 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <AuthProvider>
-      <InnerApp />
-    </AuthProvider>
+    <DarkModeProvider>
+      <AuthProvider>
+        <InnerApp />
+      </AuthProvider>
+    </DarkModeProvider>
   );
 }
 

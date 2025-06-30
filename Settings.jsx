@@ -18,9 +18,11 @@ import darkmode from './fotografije/darkmode-white.png'
 import darkmodee from './fotografije/darkmode-black.png'
 import At from './fotografije/@-white.png'
 import Att from './fotografije/@-black.png'
+import { useContext } from 'react';
+import { DarkModeContext } from './DarkModeContext';
 
 export default function Settings() {
-  const [darkMode, setDarkMode] = useState(true);
+  const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [activeStatus, setActiveStatus] = useState(true);
   const [username, setUsername] = useState('manojlo123');
   const [modalVisible, setModalVisible] = useState(false);
@@ -100,7 +102,7 @@ export default function Settings() {
           </View>
           <Switch
             value={darkMode}
-            onValueChange={setDarkMode}
+            onValueChange={toggleDarkMode}
             trackColor={{ false: '#767577', true: '#81b0ff' }}
             thumbColor={darkMode ? '#1e90ff' : '#f4f3f4'}
           />
@@ -197,7 +199,7 @@ export default function Settings() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'white',
     paddingHorizontal: 20,
     paddingTop: 40,
   },

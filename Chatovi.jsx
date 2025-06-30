@@ -1,6 +1,8 @@
 import { View, StyleSheet, Text, FlatList, Image } from "react-native";
 import img1 from './fotografije/bjelac.jpg';
 import img2 from './fotografije/bjelac2.webp';
+import { useContext } from 'react';
+import { DarkModeContext } from './DarkModeContext';
 
 function Chatovi() {
   const niz = [
@@ -19,9 +21,10 @@ function Chatovi() {
       timeOfLastMessage: 'Yesterday',
     },
   ];
+  const { darkMode } = useContext(DarkModeContext);
 
   return (
-    <View style={styles.container}>
+    <View style={darkMode ? styles.container : styles.containerblack}>
       <FlatList
         data={niz}
         keyExtractor={(item, index) => index.toString()}
@@ -29,15 +32,15 @@ function Chatovi() {
           <View style={styles.chatItem}>
             <Image source={item.profileImg} style={styles.avatar} />
             <View style={styles.chatContent}>
-              <Text style={styles.username}>{item.username}</Text>
-              <Text style={styles.message}>
+              <Text style={darkMode ? styles.username : styles.usernameblack}>{item.username}</Text>
+              <Text style={ darkMode ? styles.message : styles.messageblack}>
                 {item.lastMessageSender && (
-                  <Text style={styles.senderLabel}>{item.lastMessageSender} </Text>
+                  <Text style={darkMode ? styles.senderLabel : styles.senderblack}>{item.lastMessageSender} </Text>
                 )}
                 {item.lastMessage}
               </Text>
             </View>
-            <Text style={styles.time}>{item.timeOfLastMessage}</Text>
+            <Text style={darkMode ? styles.time : styles.timeblack}>{item.timeOfLastMessage}</Text>
           </View>
         )}
       />
@@ -51,12 +54,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     padding: 10,
   },
+  containerblack: {
+    flex: 1,
+    backgroundColor: 'white',
+    padding: 10,
+  },
   chatItem: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 12,
-    borderBottomColor: '#444',
-    borderBottomWidth: 1,
     position: 'relative',
   },
   avatar: {
@@ -74,8 +80,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
   },
+  usernameblack: {
+    color: 'black',
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
   message: {
     color: '#ccc',
+    fontSize: 16,
+    marginTop: 2,
+  },
+  messageblack: {
+    color: '#42B2B2B',
     fontSize: 16,
     marginTop: 2,
   },
@@ -83,13 +99,24 @@ const styles = StyleSheet.create({
     color: '#aaa',
     fontWeight: 'bold',
   },
+  senderblack: {
+    color: '#2B2B2B',
+    fontWeight: 'bold',
+  },
   time: {
     position: 'absolute',
     right: 0,
     top: 10,
     color: '#888',
-    fontSize: 14,
+    fontSize: 16,
   },
+  timeblack: {
+    position: 'absolute',
+    right: 0,
+    top: 10,
+    color: '#2F2F2F',
+    fontSize: 16,
+  }
 });
 
 export default Chatovi;
