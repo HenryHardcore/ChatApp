@@ -34,7 +34,7 @@ export default function App() {
 
 function InnerApp() {
   const { userLoggedIn, loading } = useAuth();
-  console.log('userLoggedIn:', userLoggedIn, 'loading:', loading);
+  
   if (loading) {
     return (
       <View style={styles.center}>
