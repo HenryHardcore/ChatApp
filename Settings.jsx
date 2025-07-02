@@ -13,7 +13,6 @@ import {
   Pressable,
 } from 'react-native';
 import { auth, db } from './firebase/firebase';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import * as ImagePicker from 'expo-image-picker';
 import avatar from './fotografije/avatar.jpg'
@@ -38,7 +37,6 @@ export default function Settings() {
   const CLOUD_NAME = 'dli2zuwyc';           
   const UPLOAD_PRESET = 'unsigned_preset';
 
-  console.log('adgASDG')
 
   const uploadAndSave = async (uri) => {
     try {

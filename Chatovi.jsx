@@ -45,20 +45,22 @@ function Chatovi({ navigation }) {
         data={chats}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={styles.chatItem}>
-            <Image source={img1} style={styles.avatar} />
-            <View style={styles.chatContent}>
-              <Text style={darkMode ? styles.username : styles.usernameblack}>
-                {item.name || "Unknown User"}
-              </Text>
-              <Text style={darkMode ? styles.message : styles.messageblack}>
-                {item.lastMessage || "No messages yet"}
+          <TouchableOpacity onPress={() => navigation.navigate("Chat", { chatId: item.id })}>
+            <View style={styles.chatItem}>
+              <Image source={img1} style={styles.avatar} />
+              <View style={styles.chatContent}>
+                <Text style={darkMode ? styles.username : styles.usernameblack}>
+                  {item.name || "Unknown User"}
+                </Text>
+                <Text style={darkMode ? styles.message : styles.messageblack}>
+                  {item.lastMessage || "No messages yet"}
+                </Text>
+              </View>
+              <Text style={darkMode ? styles.time : styles.timeblack}>
+                {item.lastMessageTime?.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) || ''}
               </Text>
             </View>
-            <Text style={darkMode ? styles.time : styles.timeblack}>
-              {item.lastMessageTime?.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) || ''}
-            </Text>
-          </View>
+          </TouchableOpacity>
         )}
         ListEmptyComponent={() => (
           <Text style={{ color: darkMode ? 'white' : 'black', textAlign: 'center', marginTop: 20 }}>
