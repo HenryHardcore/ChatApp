@@ -38,6 +38,7 @@ export default function Settings() {
   const CLOUD_NAME = 'dli2zuwyc';           
   const UPLOAD_PRESET = 'unsigned_preset';
 
+  console.log('adgASDG')
 
   const uploadAndSave = async (uri) => {
     try {
