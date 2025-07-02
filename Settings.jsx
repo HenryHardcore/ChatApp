@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,9 @@ import {
   Modal,
   Pressable,
 } from 'react-native';
+import { auth, db } from './firebase/firebase';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import * as ImagePicker from 'expo-image-picker';
 import avatar from './fotografije/avatar.jpg'
 import darkmode from './fotografije/darkmode-white.png'
@@ -20,6 +23,7 @@ import At from './fotografije/@-white.png'
 import Att from './fotografije/@-black.png'
 import { useContext } from 'react';
 import { DarkModeContext } from './DarkModeContext';
+import axios from 'axios';
 
 export default function Settings() {
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
@@ -30,6 +34,62 @@ export default function Settings() {
   const [newUsername, setNewUsername] = useState(username);
   const [avatarModalVisible, setAvatarModalVisible] = useState(false);
   const [avatarUri, setAvatarUri] = useState(null);
+  const user = auth.currentUser;
+  const CLOUD_NAME = 'dli2zuwyc';           
+  const UPLOAD_PRESET = 'unsigned_preset';
+
+
+  const uploadAndSave = async (uri) => {
+    try {
+      
+      const formData = new FormData();
+      formData.append('upload_preset', UPLOAD_PRESET);
+
+      const filename = uri.split('/').pop();
+      const match = /\.(\w+)$/.exec(filename);
+      const type = match ? `image/${match[1]}` : 'image';
+
+      formData.append('file', {
+        uri,
+        name: filename,
+        type,
+      });
+
+      const response = await axios.post(
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+        formData,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        }
+      );
+
+      const uploadedUrl = response.data.secure_url;
+
+      await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+        photoURL: uploadedUrl,
+      });
+
+      setAvatarUri(uploadedUrl);
+    } catch (error) {
+      console.error('Cloudinary upload error:', error);
+      Alert.alert('Upload failed', 'Could not upload image to Cloudinary.');
+    }
+  };
+
+  useEffect(() => {
+    const loadAvatar = async () => {
+      const userRef = doc(db, 'users', user.uid);
+      const userSnap = await getDoc(userRef);
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        if (data.photoURL) {
+          setAvatarUri(data.photoURL);
+        }
+      }
+    };
+
+    loadAvatar();
+  }, []);
 
   const handleTakePhoto = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -39,16 +99,19 @@ export default function Settings() {
     }
 
     const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.Image,
       quality: 1,
     });
-
+    
     if (!result.canceled) {
-      const imageUri = result.assets[0].uri;
-      setAvatarUri(imageUri); 
+      try {
+        await uploadAndSave(result.assets[0].uri);
+      } catch (e) {
+        console.error(e);
+        Alert.alert('Error', 'Could not upload picture.');
+      }
     }
-
-    setAvatarModalVisible(false); 
+    setAvatarModalVisible(false);
   };
 
   const handlePickFromGallery = async () => {
@@ -59,13 +122,18 @@ export default function Settings() {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.Image,
       quality: 1,
     });
 
     if (!result.canceled) {
       const imageUri = result.assets[0].uri;
-      setAvatarUri(imageUri); 
+      try {
+        await uploadAndSave(imageUri);       
+      } catch (e) {
+        console.error('Upload failed', e);
+        Alert.alert('Error', 'Could not upload picture.');
+      }
     }
 
     setAvatarModalVisible(false); 

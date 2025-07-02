@@ -1,47 +1,69 @@
 import { View, StyleSheet, Text, FlatList, Image } from "react-native";
-import img1 from './fotografije/bjelac.jpg';
-import img2 from './fotografije/bjelac2.webp';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { DarkModeContext } from './DarkModeContext';
+import {
+  collection,
+  query,
+  where,
+  orderBy,
+  onSnapshot,
+  getDocs,
+  addDoc,
+  serverTimestamp
+} from "firebase/firestore";
+import { auth, db } from "./firebase/firebase";
+import img1 from './fotografije/bjelac.jpg'; 
 
-function Chatovi() {
-  const niz = [
-    {
-      profileImg: img1,
-      username: 'Katarina Stanojlovic',
-      lastMessage: 'vazi vazi',
-      lastMessageSender: 'You:',
-      timeOfLastMessage: '3:55 PM',
-    },
-    {
-      profileImg: img2,
-      username: 'Manojlo Stanarevic',
-      lastMessage: 'vaziiii',
-      lastMessageSender: '',
-      timeOfLastMessage: 'Yesterday',
-    },
-  ];
+function Chatovi({ navigation }) {
   const { darkMode } = useContext(DarkModeContext);
+  const currentUser = auth.currentUser;
+  const [chats, setChats] = useState([]);
+
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const q = query(
+      collection(db, "chats"),
+      where("members", "array-contains", currentUser.uid),
+      orderBy("lastMessageTime", "desc")
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      if (snapshot.empty) {
+        setChats([]);
+      } else {
+        setChats(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      }
+    });
+
+    return unsubscribe;
+  }, []);
 
   return (
     <View style={darkMode ? styles.container : styles.containerblack}>
       <FlatList
-        data={niz}
-        keyExtractor={(item, index) => index.toString()}
+        data={chats}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.chatItem}>
-            <Image source={item.profileImg} style={styles.avatar} />
+            <Image source={img1} style={styles.avatar} />
             <View style={styles.chatContent}>
-              <Text style={darkMode ? styles.username : styles.usernameblack}>{item.username}</Text>
-              <Text style={ darkMode ? styles.message : styles.messageblack}>
-                {item.lastMessageSender && (
-                  <Text style={darkMode ? styles.senderLabel : styles.senderblack}>{item.lastMessageSender} </Text>
-                )}
-                {item.lastMessage}
+              <Text style={darkMode ? styles.username : styles.usernameblack}>
+                {item.name || "Unknown User"}
+              </Text>
+              <Text style={darkMode ? styles.message : styles.messageblack}>
+                {item.lastMessage || "No messages yet"}
               </Text>
             </View>
-            <Text style={darkMode ? styles.time : styles.timeblack}>{item.timeOfLastMessage}</Text>
+            <Text style={darkMode ? styles.time : styles.timeblack}>
+              {item.lastMessageTime?.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) || ''}
+            </Text>
           </View>
+        )}
+        ListEmptyComponent={() => (
+          <Text style={{ color: darkMode ? 'white' : 'black', textAlign: 'center', marginTop: 20 }}>
+            Oops, looks like you have no chats yet 😅
+          </Text>
         )}
       />
     </View>
@@ -119,4 +141,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Chatovi;
+export default Chatovi
