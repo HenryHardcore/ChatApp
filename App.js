@@ -18,6 +18,7 @@ import Settings from './Settings';
 import Search from './Search';
 import { DarkModeProvider } from './DarkModeContext';
 import { AuthProvider, useAuth } from './auth';
+import Chat from './Chat'
 
 const Stack = createNativeStackNavigator();
 
@@ -58,6 +59,7 @@ function InnerApp() {
                 <Stack.Screen name="Chatovi" component={Chatovi} />
                 <Stack.Screen name="Settings" component={Settings} />
                 <Stack.Screen name="Search" component={Search} />
+                <Stack.Screen name="Chat" component={Chat} /> 
               </>
             ) : (
               <>

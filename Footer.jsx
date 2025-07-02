@@ -14,13 +14,13 @@ function Footer() {
 
   return (
     <View style={darkMode ? styles.footer : styles.footerlight}>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Chatovi')}> 
+      <TouchableOpacity style={styles.button} onPress={() => navigation.replace('Chatovi')}> 
         <ImageBackground
           source={darkMode ? chats : chatss}
           style={styles.image}
         />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Settings')}> 
+      <TouchableOpacity style={styles.button} onPress={() => navigation.replace('Settings')}> 
         <ImageBackground
           source={darkMode ? settings: settingss}
           style={styles.image}
