@@ -11,7 +11,7 @@ function Header() {
   const { darkMode } = useContext(DarkModeContext);
 
   const goToSearch = () => {
-    navigation.replace('Search'); 
+    navigation.navigate('Search'); 
   };
 
   return (
