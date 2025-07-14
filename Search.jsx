@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Image
 } from 'react-native';
-import { collection, query, where, getDocs, limit } from 'firebase/firestore';
+import { collection, query, where, getDocs, limit, addDoc } from 'firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { DarkModeContext } from './DarkModeContext';
 import { auth, db } from './firebase/firebase';
@@ -49,28 +49,35 @@ export default function Search() {
   };
 
   const handleUserPress = async (userIdToChatWith) => {
-    const chatsQuery = query(
-      collection(db, 'chats'),
-      where('members', 'array-contains', currentUser.uid)
-    );
-    const chatsSnapshot = await getDocs(chatsQuery);
+    try {
+        const chatsQuery = query(
+          collection(db, 'chats'),
+          where('members', 'array-contains', currentUser.uid)
+        );
+        const chatsSnapshot = await getDocs(chatsQuery);
 
-    const existingChat = chatsSnapshot.docs.find(doc =>
-      doc.data().members.includes(userIdToChatWith)
-    );
+        const existingChat = chatsSnapshot.docs.find(doc =>
+          doc.data().members.includes(userIdToChatWith)
+        );
 
-    if (existingChat) {
-      navigation.navigate('Chat', { chatId: existingChat.id });
-    } else {
-      const newChatRef = await addDoc(collection(db, 'chats'), {
-        members: [currentUser.uid, userIdToChatWith],
-        createdAt: new Date(),
-        lastMessage: '',
-        lastMessageTime: null
-      });
+        if (existingChat) {
+          console.log("Navigating to existing chat with ID:", existingChat.id);
+          navigation.navigate('Chat', { chatId: existingChat.id });
+        } else {
+          const newChatRef = await addDoc(collection(db, 'chats'), {
+            members: [currentUser.uid, userIdToChatWith],
+            createdAt: new Date(),
+            lastMessage: '',
+            lastMessageTime: null
+          });
 
-      navigation.navigate('Chat', { chatId: newChatRef.id });
-    }
+          console.log("Navigating to new chat with ID:", newChatRef.id);
+          navigation.navigate('Chat', { chatId: newChatRef.id });
+        }
+      } catch (error) {
+        console.error("Error in handleUserPress:", error);
+        Alert.alert("Error", error.message);
+      }
   };
 
   return (

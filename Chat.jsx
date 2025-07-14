@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { doc, getDoc } from 'firebase/firestore';
 import { db, auth } from './firebase/firebase';
@@ -35,18 +41,27 @@ export default function Chat() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={26} color="white" />
         </TouchableOpacity>
+
         {otherUser && (
-          <>
-            <Image source={{ uri: otherUser.photoURL }} style={styles.avatar} />
+          <View style={styles.userInfo}>
+            <Image
+              source={
+                otherUser.photoURL
+                  ? { uri: otherUser.photoURL }
+                  : require('./fotografije/avatar.jpg') // fallback image
+              }
+              style={styles.avatar}
+            />
             <View>
               <Text style={styles.name}>
                 {otherUser.firstName} {otherUser.lastName}
               </Text>
+              <Text style={styles.status}>Online</Text>
             </View>
-          </>
+          </View>
         )}
       </View>
 
@@ -65,20 +80,35 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingTop: 10,
+    paddingBottom: 12,
     backgroundColor: '#111',
-    padding: 12,
-    paddingTop: 50,
-    gap: 12,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#333',
+  },
+  backButton: {
+    marginRight: 10,
+  },
+  userInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
   },
   avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 10,
   },
   name: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
+  },
+  status: {
+    color: '#aaa',
+    fontSize: 12,
   },
   chatBody: {
     flex: 1,

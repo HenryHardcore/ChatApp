@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, FlatList, Image } from "react-native";
+import { View, StyleSheet, Text, FlatList, Image, TouchableOpacity } from "react-native";
 import { useContext, useEffect, useState } from 'react';
 import { DarkModeContext } from './DarkModeContext';
 import {
