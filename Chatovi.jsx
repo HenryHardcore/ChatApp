@@ -11,8 +11,9 @@ import {
   addDoc,
   serverTimestamp
 } from "firebase/firestore";
+import { doc as docRef, getDoc } from 'firebase/firestore';
 import { auth, db } from "./firebase/firebase";
-import img1 from './fotografije/bjelac.jpg'; 
+import avatar from './fotografije/avatar.jpg';
 
 function Chatovi({ navigation }) {
   const { darkMode } = useContext(DarkModeContext);
@@ -28,12 +29,38 @@ function Chatovi({ navigation }) {
       orderBy("lastMessageTime", "desc")
     );
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
       if (snapshot.empty) {
         setChats([]);
-      } else {
-        setChats(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        return;
       }
+
+      const chatsData = await Promise.all(
+        snapshot.docs.map(async (doc) => {
+          const chat = { id: doc.id, ...doc.data() };
+          const otherUserId = chat.members.find(uid => uid !== currentUser.uid);
+
+          try {
+            const otherUserSnap = await getDoc(docRef(db, "users", otherUserId));
+            if (otherUserSnap.exists()) {
+              const otherUser = otherUserSnap.data();
+              return {
+                ...chat,
+                firstName: otherUser.firstName,
+                lastName: otherUser.lastName,
+                photoURL: otherUser.photoURL,
+              };
+            } else {
+              return chat;
+            }
+          } catch (error) {
+            console.error("Failed to fetch user:", error);
+            return chat;
+          }
+        })
+      );
+
+      setChats(chatsData);
     });
 
     return unsubscribe;
@@ -47,10 +74,10 @@ function Chatovi({ navigation }) {
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => navigation.navigate("Chat", { chatId: item.id })}>
             <View style={styles.chatItem}>
-              <Image source={img1} style={styles.avatar} />
+              <Image source={ item.photoURL ? { uri: item.photoURL } : avatar } style={styles.avatar} />
               <View style={styles.chatContent}>
                 <Text style={darkMode ? styles.username : styles.usernameblack}>
-                  {item.name || "Unknown User"}
+                  {item.firstName + " " + item.lastName || "Unknown User"}
                 </Text>
                 <Text style={darkMode ? styles.message : styles.messageblack}>
                   {item.lastMessage || "No messages yet"}
