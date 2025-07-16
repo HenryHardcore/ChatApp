@@ -10,11 +10,18 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { doc, getDoc } from 'firebase/firestore';
 import { db, auth } from './firebase/firebase';
 import { Ionicons } from '@expo/vector-icons';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  TextInput,
+  Keyboard,
+} from 'react-native';
 
 export default function Chat() {
   const navigation = useNavigation();
   const route = useRoute();
   const { chatId } = route.params;
+  const [message, setMessage] = useState('');
 
   const currentUser = auth.currentUser;
   const [otherUser, setOtherUser] = useState(null);
@@ -39,10 +46,15 @@ export default function Chat() {
   }, [chatId]);
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+    style={styles.container}
+    behavior="height"
+    keyboardVerticalOffset={0}
+  >
+    <View style={{ flex: 1 }}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={26} color="white" />
+          <Ionicons name="arrow-back" size={35} color="white" />
         </TouchableOpacity>
 
         {otherUser && (
@@ -51,7 +63,7 @@ export default function Chat() {
               source={
                 otherUser.photoURL
                   ? { uri: otherUser.photoURL }
-                  : require('./fotografije/avatar.jpg') // fallback image
+                  : require('./fotografije/avatar.jpg')
               }
               style={styles.avatar}
             />
@@ -64,11 +76,41 @@ export default function Chat() {
           </View>
         )}
       </View>
-
       <View style={styles.chatBody}>
         <Text style={{ color: 'gray' }}>Chat screen here</Text>
       </View>
+
+      <View style={styles.chatInputContainer}>
+        <TextInput
+          style={styles.chatInput}
+          placeholder="Type a message..."
+          placeholderTextColor="#888"
+          value={message}
+          onChangeText={setMessage}
+          returnKeyType="send"
+          onSubmitEditing={() => {
+            if (message.trim()) {
+              console.log("Sending:", message);
+              setMessage('');
+              Keyboard.dismiss();
+            }
+          }}
+        />
+        <TouchableOpacity
+          onPress={() => {
+            if (message.trim()) {
+              console.log("Sending:", message);
+              setMessage('');
+              Keyboard.dismiss();
+            }
+          }}
+          style={styles.sendButton}
+        >
+          <Ionicons name="send" size={22} color="#fff" />
+        </TouchableOpacity>
+      </View>
     </View>
+  </KeyboardAvoidingView>
   );
 }
 
@@ -113,5 +155,30 @@ const styles = StyleSheet.create({
   chatBody: {
     flex: 1,
     padding: 20,
+  },
+    chatInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderTopWidth: 0.5,
+    paddingBottom: 35,
+    borderTopColor: '#333',
+    backgroundColor: '#000',
+  },
+  chatInput: {
+    flex: 1,
+    backgroundColor: '#111',
+    color: 'white',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 25,
+    fontSize: 16,
+  },
+  sendButton: {
+    marginLeft: 10,
+    backgroundColor: '#1e90ff',
+    padding: 10,
+    borderRadius: 25,
   },
 });
