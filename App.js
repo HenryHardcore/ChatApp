@@ -4,8 +4,9 @@ enableScreens();
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useNavigationState } from '@react-navigation/native';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 
@@ -34,7 +35,20 @@ export default function App() {
 }
 
 function InnerApp() {
+  const navigationRef = useNavigationContainerRef();
+  const [currentRouteName, setCurrentRouteName] = useState(null);
   const { userLoggedIn, loading } = useAuth();
+
+  useEffect(() => {
+    if (navigationRef.isReady()) {
+      setCurrentRouteName(navigationRef.getCurrentRoute()?.name);
+    }
+  }, [navigationRef]);
+
+  const handleStateChange = () => {
+    const currentRoute = navigationRef.getCurrentRoute();
+    setCurrentRouteName(currentRoute?.name);
+  };
   
   if (loading) {
     return (
@@ -46,12 +60,16 @@ function InnerApp() {
 
   return (
     <SafeAreaProvider>
-    <NavigationContainer>
+    <NavigationContainer
+      ref={navigationRef}
+      onReady={handleStateChange}
+      onStateChange={handleStateChange}
+    >
       <View style={styles.root}>
         <StatusBar style="light" translucent />
         <SafeAreaView style={styles.safeArea}>
           
-          {userLoggedIn && <Header />}
+          {userLoggedIn && currentRouteName !== 'Chat' && <Header />}
 
           <Stack.Navigator screenOptions={{ headerShown: false, animation: 'none', }}>
             {userLoggedIn ? (
@@ -69,7 +87,7 @@ function InnerApp() {
             )}
           </Stack.Navigator>
 
-          {userLoggedIn && <Footer />}
+          {userLoggedIn && currentRouteName !== 'Chat' && <Footer />}
           
         </SafeAreaView>
       </View>

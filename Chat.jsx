@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingTop: 10,
     paddingBottom: 12,
-    backgroundColor: '#111',
+    backgroundColor: '#000',
     borderBottomWidth: 0.5,
     borderBottomColor: '#333',
   },
@@ -103,12 +103,12 @@ const styles = StyleSheet.create({
   },
   name: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 22,
     fontWeight: 'bold',
   },
   status: {
     color: '#aaa',
-    fontSize: 12,
+    fontSize: 16,
   },
   chatBody: {
     flex: 1,
